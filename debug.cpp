@@ -29,6 +29,8 @@ size_t disInstr(const Chunk &chunk, size_t offset)
             return simpleInstr("OP_RETURN", offset);
         case OP_CONSTANT:
             return constInstr("OP_CONSTANT", chunk, offset);
+        case OP_CONSTANT_LONG:
+            return longConstInstr("OP_CONSTANT_LONG", chunk, offset);
         default:
             throw std::invalid_argument(std::format("Unknown opcode {}", instruction));
     }
@@ -45,8 +47,19 @@ size_t constInstr(const std::string &name, const Chunk &chunk, size_t offset)
     uint8_t constant = chunk[offset + 1];
 
     // If we remove the "+" in +constant we get the char representation of the constant id which we don't want
-    std::cout << name << " " << std::setfill('0') << std::setw(4) << +constant << " ";
+    std::cout << name << " " << +constant << " ";
     std::cout << "'" << chunk.getConstant(constant) << "'" << std::endl;
 
     return offset + 2;
+}
+
+size_t longConstInstr(const std::string &name, const Chunk &chunk, size_t offset)
+{
+    uint16_t constant = (chunk[offset + 1] << 8) + (chunk[offset + 2]);
+
+    std::cout << name << " " << +constant << " ";
+    std::cout << "'" << chunk.getConstant(constant) << "'" << std::endl;
+
+    return offset + 3;
+
 }

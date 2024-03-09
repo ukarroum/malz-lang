@@ -8,13 +8,15 @@
 enum OpCode: uint8_t
 {
     OP_RETURN,
-    OP_CONSTANT
+    OP_CONSTANT,
+    OP_CONSTANT_LONG
 };
 
 class Chunk
 {
 public:
     void writeChunk(uint8_t opcode, size_t line);
+    void writeConstant(Value value, int line);
     size_t addConstant(Value value);
 
     [[nodiscard]] size_t size() const { return m_code.size(); }

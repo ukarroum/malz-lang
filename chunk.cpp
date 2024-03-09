@@ -30,3 +30,20 @@ size_t Chunk::getLine(size_t i) const
     else
         return m_lines[idx - 1].second;
 }
+
+void Chunk::writeConstant(Value value, int line)
+{
+    auto idx = addConstant(value);
+
+    if(idx < 256)
+    {
+        writeChunk(OP_CONSTANT, line);
+        writeChunk(idx, line);
+    }
+    else
+    {
+        writeChunk(OP_CONSTANT_LONG, line);
+        writeChunk(idx >> 8, line);
+        writeChunk(idx & 0xFF, line);
+    }
+}
