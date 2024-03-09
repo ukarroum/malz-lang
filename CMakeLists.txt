@@ -8,4 +8,6 @@ include_directories(.)
 add_executable(malz_lang
         main.cpp
         chunk.cpp
-        debug.cpp)
+        debug.cpp
+        value.cpp
+        value.hpp)

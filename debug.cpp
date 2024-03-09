@@ -8,7 +8,9 @@ void disChunk(const Chunk &chunk, const std::string &name)
 {
     std::cout << "=== " << name << " ===" << std::endl;
 
-    for(size_t offset = 0; offset < chunk.size(); offset++)
+    size_t offset = 0;
+
+    while(offset < chunk.size())
     {
         offset = disInstr(chunk, offset);
     }
@@ -17,6 +19,7 @@ void disChunk(const Chunk &chunk, const std::string &name)
 size_t disInstr(const Chunk &chunk, size_t offset)
 {
     std::cout << std::setfill('0') << std::setw(4) << offset << " ";
+    std::cout << "[ " << chunk.getLine(offset) << " ] ";
 
     auto instruction = chunk[offset];
 
@@ -24,6 +27,8 @@ size_t disInstr(const Chunk &chunk, size_t offset)
     {
         case OP_RETURN:
             return simpleInstr("OP_RETURN", offset);
+        case OP_CONSTANT:
+            return constInstr("OP_CONSTANT", chunk, offset);
         default:
             throw std::invalid_argument(std::format("Unknown opcode {}", instruction));
     }
@@ -33,4 +38,15 @@ size_t simpleInstr(const std::string &name, size_t offset)
 {
     std::cout << name << std::endl;
     return offset + 1;
+}
+
+size_t constInstr(const std::string &name, const Chunk &chunk, size_t offset)
+{
+    uint8_t constant = chunk[offset + 1];
+
+    // If we remove the "+" in +constant we get the char representation of the constant id which we don't want
+    std::cout << name << " " << std::setfill('0') << std::setw(4) << +constant << " ";
+    std::cout << "'" << chunk.getConstant(constant) << "'" << std::endl;
+
+    return offset + 2;
 }
