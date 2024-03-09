@@ -20,9 +20,9 @@ public:
     [[nodiscard]] size_t size() const { return m_code.size(); }
     uint8_t operator[](size_t i) const { return m_code[i]; }
     [[nodiscard]] Value getConstant(size_t i) const { return m_constants[i]; }
-    [[nodiscard]] size_t getLine(size_t i) const { return m_lines[i]; }
+    [[nodiscard]] size_t getLine(size_t i) const;
 private:
     std::vector<uint8_t> m_code;
     std::vector<Value> m_constants;
-    std::vector<size_t> m_lines;
+    std::vector<std::pair<size_t, size_t>> m_lines;
 };
