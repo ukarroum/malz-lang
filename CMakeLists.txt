@@ -10,4 +10,6 @@ add_executable(malz_lang
         chunk.cpp
         debug.cpp
         value.cpp
-        value.hpp)
+        value.hpp
+        ir.cpp
+        ir.hpp)
