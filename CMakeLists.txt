@@ -12,4 +12,6 @@ add_executable(malz_lang
         value.cpp
         value.hpp
         ir.cpp
-        ir.hpp)
+        ir.hpp
+        vm.cpp
+        vm.hpp)

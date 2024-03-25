@@ -9,7 +9,12 @@ enum OpCode: uint8_t
 {
     OP_RETURN,
     OP_CONSTANT,
-    OP_CONSTANT_LONG
+    OP_CONSTANT_LONG,
+    OP_NEGATE,
+    OP_ADD,
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE
 };
 
 class Chunk
@@ -23,6 +28,7 @@ public:
     uint8_t operator[](size_t i) const { return m_code[i]; }
     [[nodiscard]] Value getConstant(size_t i) const { return m_constants[i]; }
     [[nodiscard]] size_t getLine(size_t i) const;
+    [[nodiscard]] const std::vector<uint8_t>& getCode() { return m_code; }
 private:
     std::vector<uint8_t> m_code;
     std::vector<Value> m_constants;
