@@ -14,8 +14,8 @@ struct IntermediateInstr
     // Not sure about this one, maybe I'll switch to inheritence later
     std::optional<OpType> op;
     std::optional<std::string> label;
-    std::optional<std::vector<std::string>> labels; // used for jmp and return
-    std::string dest;
+    std::optional<std::string> true_label;
+    std::optional<std::string> false_label;
 
     [[nodiscard]] bool isLabel() const { return !op.has_value(); }
 };

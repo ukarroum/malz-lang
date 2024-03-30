@@ -70,13 +70,18 @@ std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::unor
     {
         auto last = block.second[block.second.size() - 1];
 
-        if(last.op == OpType::JMP || last.op == OpType::BRANCH)
+        if(last.op == OpType::JMP)
         {
-            cfg[block.first] = last.labels.value();
+            cfg[block.first] = {last.label.value()};
+        }
+        else if(last.op == OpType::BRANCH)
+        {
+            cfg[block.first] = {last.true_label.value(), last.false_label.value()};
         }
         else if(last.op == OpType::RETURN)
         {
             cfg[block.first] = std::vector<std::string>();
         }
+        // Need to manage use case of else
     }
 }
