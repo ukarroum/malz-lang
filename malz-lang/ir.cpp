@@ -12,11 +12,11 @@ std::vector<Block> formBlocks(const std::vector<IntermediateInstr> &body)
     for(auto instr: body)
     {
         // An op
-        if(!instr.isLabel())
+        if(!instr.op == OpType::LABEL)
         {
             current_block.push_back(instr);
 
-            if(std::ranges::find(terminators, instr.op.value()) != terminators.end())
+            if(std::ranges::find(terminators, instr.op) != terminators.end())
             {
                 blocks.push_back(current_block);
                 current_block.clear();
@@ -45,9 +45,9 @@ std::unordered_map<std::string, Block> block_map(const std::vector<Block> &block
 
     for(auto& block: blocks)
     {
-        if(block[0].isLabel())
+        if(block[0].op == OpType::LABEL)
         {
-            name = block[0].label.value();
+            name = block[0].label;
             new_block = Block(block.begin() + 1, block.end());
         }
         else
@@ -72,11 +72,11 @@ std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::unor
 
         if(last.op == OpType::JMP)
         {
-            cfg[block.first] = {last.label.value()};
+            cfg[block.first] = {last.label};
         }
         else if(last.op == OpType::BRANCH)
         {
-            cfg[block.first] = {last.true_label.value(), last.false_label.value()};
+            cfg[block.first] = {last.true_label, last.false_label};
         }
         else if(last.op == OpType::RETURN)
         {
@@ -85,3 +85,5 @@ std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::unor
         // Need to manage use case of else
     }
 }
+
+

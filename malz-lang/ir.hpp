@@ -6,18 +6,20 @@
 
 enum class OpType
 {
-    JMP, BRANCH, RETURN
+    JMP, BRANCH, RETURN, LABEL
 };
 
 struct IntermediateInstr
 {
-    // Not sure about this one, maybe I'll switch to inheritence later
-    std::optional<OpType> op;
-    std::optional<std::string> label;
-    std::optional<std::string> true_label;
-    std::optional<std::string> false_label;
+    // Not sure about this one, maybe I'll switch to inheritance later
+    OpType op;
+    std::string label;
+    std::string true_label;
+    std::string false_label;
+    std::vector<std::string> args;
+    std::string dest;
 
-    [[nodiscard]] bool isLabel() const { return !op.has_value(); }
+    bool operator==(const IntermediateInstr& other) const = default;
 };
 
 using Block = std::vector<IntermediateInstr>;
