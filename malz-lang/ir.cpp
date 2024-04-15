@@ -5,14 +5,14 @@
 
 std::vector<Block> formBlocks(const std::vector<IntermediateInstr> &body)
 {
-    std::vector<std::vector<IntermediateInstr>> blocks;
+    std::vector<Block> blocks;
     std::vector<OpType> terminators = {OpType::JMP, OpType::BRANCH, OpType::RETURN};
-    std::vector<IntermediateInstr> current_block;
+    Block current_block;
 
-    for(auto instr: body)
+    for(const auto& instr: body)
     {
         // An op
-        if(!instr.op == OpType::LABEL)
+        if(instr.op != OpType::LABEL)
         {
             current_block.push_back(instr);
 
@@ -37,9 +37,9 @@ std::vector<Block> formBlocks(const std::vector<IntermediateInstr> &body)
     return blocks;
 }
 
-std::unordered_map<std::string, Block> block_map(const std::vector<Block> &blocks)
+std::vector<std::pair<std::string, Block>> blocksNames(const std::vector<Block> &blocks)
 {
-    std::unordered_map<std::string, Block> map;
+    std::vector<std::pair<std::string, Block>> blocksWithNames;
     std::string name;
     Block new_block;
 
@@ -52,38 +52,38 @@ std::unordered_map<std::string, Block> block_map(const std::vector<Block> &block
         }
         else
         {
-            name = std::format("b{}", map.size());
+            name = std::format("b{}", blocksWithNames.size());
             new_block = block;
         }
 
-        map[name] = new_block;
+        blocksWithNames.emplace_back(name, new_block);
     }
 
-    return map;
+    return blocksWithNames;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::unordered_map<std::string, Block> &map)
+std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::vector<std::pair<std::string, Block>> &blocksWithNames)
 {
     std::unordered_map<std::string, std::vector<std::string>> cfg;
 
-    for(auto block: map)
+    for(int i = 0; i < blocksWithNames.size(); i++)
     {
-        auto last = block.second[block.second.size() - 1];
+        std::string name = blocksWithNames[i].first;
+        const Block& block = blocksWithNames[i].second;
+
+        auto last = block[block.size() - 1];
 
         if(last.op == OpType::JMP)
-        {
-            cfg[block.first] = {last.label};
-        }
+            cfg[name] = {last.label};
         else if(last.op == OpType::BRANCH)
-        {
-            cfg[block.first] = {last.true_label, last.false_label};
-        }
-        else if(last.op == OpType::RETURN)
-        {
-            cfg[block.first] = std::vector<std::string>();
-        }
-        // Need to manage use case of else
+            cfg[name] = {last.true_label, last.false_label};
+        else if(last.op == OpType::RETURN || i == blocksWithNames.size() - 1)
+            cfg[name] = std::vector<std::string>();
+        else
+            cfg[name] = {blocksWithNames[i + 1].first};
     }
+
+    return cfg;
 }
 
 

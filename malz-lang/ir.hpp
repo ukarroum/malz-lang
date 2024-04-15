@@ -6,7 +6,7 @@
 
 enum class OpType
 {
-    JMP, BRANCH, RETURN, LABEL
+    JMP, BRANCH, RETURN, LABEL, AFFECT, PRINT
 };
 
 struct IntermediateInstr
@@ -25,5 +25,5 @@ struct IntermediateInstr
 using Block = std::vector<IntermediateInstr>;
 
 std::vector<Block> formBlocks(const std::vector<IntermediateInstr>& body);
-std::unordered_map<std::string, Block> block_map(const std::vector<Block>& blocks);
-std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::unordered_map<std::string, Block>& map);
+std::vector<std::pair<std::string, Block>> blocksNames(const std::vector<Block>& blocks);
+std::unordered_map<std::string, std::vector<std::string>> getCfg(const std::vector<std::pair<std::string, Block>> &blocksWithNames);
