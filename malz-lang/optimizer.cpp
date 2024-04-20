@@ -16,25 +16,33 @@ Block deadCodeOpt(const Block& block)
 
         std::unordered_set<std::string> used = {};
 
-        for(auto& instr: block)
+        for(auto& instr: original_block)
             for(auto& arg: instr.args)
                 used.insert(arg);
 
         for(int i = 0; i < block.size(); i++)
             if(!(!block[i].dest.empty() && !used.contains(block[i].dest)))
             {
-                // Check for definitions without usage or multiple definitions were the previous ones have no effect
                 bool useless_affect = true;
-                for(int j = i + 1; j < block.size(); j++)
+
+                // Check for definitions without usage or multiple definitions were the previous ones have no effect
+                if(!block[i].dest.empty())
                 {
-                    if(std::ranges::find(block[j].args, block[i].dest) != block[j].args.end())
+                    for(int j = i + 1; j < block.size(); j++)
                     {
-                        useless_affect = false;
-                        break;
+                        if(std::ranges::find(block[j].args, block[i].dest) != block[j].args.end())
+                        {
+                            useless_affect = false;
+                            break;
+                        }
+                        if(block[j].dest == block[i].dest)
+                            break;
                     }
-                    if(block[j].dest == block[i].dest)
-                        break;
                 }
+                // Instruction with side effect
+                else
+                    useless_affect = false;
+
                 if(!useless_affect)
                     optimized_block.push_back(block[i]);
             }

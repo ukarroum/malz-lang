@@ -34,6 +34,7 @@ add_executable(malz_test
         malz-lang/ir.cpp
         malz-lang/vm.cpp
         malz-lang/optimizer.cpp
+        tests/optimizer_test.cpp
 )
 target_link_libraries(
         malz_test

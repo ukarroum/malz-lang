@@ -6,7 +6,7 @@
 
 enum class OpType
 {
-    JMP, BRANCH, RETURN, LABEL, AFFECT, PRINT
+    JMP, BRANCH, RETURN, LABEL, AFFECT, PRINT, ADD
 };
 
 struct IntermediateInstr
