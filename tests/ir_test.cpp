@@ -4,20 +4,20 @@
 
 TEST(formBlocks, BasicTest) {
     std::vector<IntermediateInstr> program {
-        {.op = OpType::AFFECT, .args = {"4"}, .dest = "v"},
+        {.op = OpType::AFFECT_CONST, .args = {"4"}, .dest = "v"},
         {.op = OpType::JMP, .label = "somewhere"},
-        {.op = OpType::AFFECT, .args = {"2"}, .dest = "v"},
+        {.op = OpType::AFFECT_CONST, .args = {"2"}, .dest = "v"},
         {.op = OpType::LABEL, .label = "somewhere"},
         {.op = OpType::PRINT, .args = {"v"}}
     };
 
     std::vector<Block> expected {
         {
-            {.op = OpType::AFFECT, .args = {"4"}, .dest = "v"},
+            {.op = OpType::AFFECT_CONST, .args = {"4"}, .dest = "v"},
             {.op = OpType::JMP, .label = "somewhere"}
         },
         {
-            {.op = OpType::AFFECT, .args = {"2"}, .dest = "v"}
+            {.op = OpType::AFFECT_CONST, .args = {"2"}, .dest = "v"}
         },
         {
             {.op = OpType::LABEL, .label = "somewhere"},
@@ -33,11 +33,11 @@ TEST(formBlocks, BasicTest) {
 TEST(blocksNames, BasicTest) {
     std::vector<Block> blocks {
             {
-                    {.op = OpType::AFFECT, .args = {"4"}, .dest = "v"},
+                    {.op = OpType::AFFECT_CONST, .args = {"4"}, .dest = "v"},
                     {.op = OpType::JMP, .label = "somewhere"}
             },
             {
-                    {.op = OpType::AFFECT, .args = {"2"}, .dest = "v"}
+                    {.op = OpType::AFFECT_CONST, .args = {"2"}, .dest = "v"}
             },
             {
                     {.op = OpType::LABEL, .label = "somewhere"},
@@ -49,14 +49,14 @@ TEST(blocksNames, BasicTest) {
             {
                 "b0",
                 {
-                    {.op = OpType::AFFECT, .args = {"4"}, .dest = "v"},
+                    {.op = OpType::AFFECT_CONST, .args = {"4"}, .dest = "v"},
                     {.op = OpType::JMP, .label = "somewhere"}
                 }
             },
             {
                 "b1",
                 {
-                    {.op = OpType::AFFECT, .args = {"2"}, .dest = "v"}
+                    {.op = OpType::AFFECT_CONST, .args = {"2"}, .dest = "v"}
                 }
             },
             {
@@ -77,14 +77,14 @@ TEST(getCfg, BasicTest) {
             {
                     "b0",
                     {
-                            {.op = OpType::AFFECT, .args = {"4"}, .dest = "v"},
+                            {.op = OpType::AFFECT_CONST, .args = {"4"}, .dest = "v"},
                             {.op = OpType::JMP, .label = "somewhere"}
                     }
             },
             {
                     "b1",
                     {
-                            {.op = OpType::AFFECT, .args = {"2"}, .dest = "v"}
+                            {.op = OpType::AFFECT_CONST, .args = {"2"}, .dest = "v"}
                     }
             },
             {
