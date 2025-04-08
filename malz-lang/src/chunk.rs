@@ -18,7 +18,7 @@ impl Chunk {
     pub fn write(&mut self, byte: u8){
         self.code.push(byte);
     }
-    pub fn add_constant(&mut self, val Value) -> usize {
+    pub fn add_constant(&mut self, val: Value) -> usize {
         self.constants.push(val);
 
         self.constants.len() - 1
