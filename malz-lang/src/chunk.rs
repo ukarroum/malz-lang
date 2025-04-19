@@ -3,7 +3,8 @@ use crate::value::Value;
 #[repr(u8)]
 pub enum OpCode {
     RETURN = 0,
-    CONSTANT = 1
+    CONSTANT = 1,
+    CONSTANT_LONG = 2
 }
 
 pub struct Chunk {
@@ -16,6 +17,7 @@ impl Chunk {
     pub fn new() -> Self {
         Self { code: Vec::new(), constants: Vec::new(), lines: Vec::new() }
     }
+
     pub fn write(&mut self, byte: u8, line: i32){
         self.code.push(byte);
 
@@ -29,6 +31,22 @@ impl Chunk {
             }
         }
     }
+
+    pub fn write_constant(&mut self, val: Value, line: i32){
+        let idx = self.add_constant(val);
+
+        if idx >= 256 {
+            self.write(OpCode::CONSTANT_LONG as u8, line);
+            self.write((idx >> 16) as u8, line);
+            self.write((idx & 0xff00 >> 8) as u8, line);
+            self.write((idx & 0xff) as u8, line);
+        }
+        else {
+            self.write(OpCode::CONSTANT as u8, line);
+            self.write(idx as u8, line);
+        }
+    }
+
     pub fn add_constant(&mut self, val: Value) -> usize {
         self.constants.push(val);
         self.constants.len() - 1

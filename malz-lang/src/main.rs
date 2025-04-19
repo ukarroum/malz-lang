@@ -9,9 +9,7 @@ use crate::debug::dis_chunk;
 fn main() {
     let mut code_chunk = Chunk::new();
 
-    let constant = code_chunk.add_constant(1.2);
-    code_chunk.write(OpCode::CONSTANT as u8, 123);
-    code_chunk.write(constant as u8, 123);
+    code_chunk.write_constant(1.2, 123);
 
     code_chunk.write(OpCode::RETURN as u8, 123);
 
